@@ -1,9 +1,10 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import About from '../pages/About';
+import renderWithRouter from '../renderWithRouter';
 
 test('Testes About', () => {
-  render(<About />);
+  renderWithRouter(<About />);
   const aboutTitle = screen.getByRole('heading', {
     level: 2,
     name: 'Page requested not found',
@@ -12,7 +13,7 @@ test('Testes About', () => {
 });
 
 test('Testes img', () => {
-  render(<About />);
+  renderWithRouter(<About />);
   const aboutTitle = screen.getByRole('img', {
     name: 'Pikachu crying because the page requested was not found',
   });
