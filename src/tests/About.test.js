@@ -5,6 +5,7 @@ import About from '../pages/About';
 test('Testes About', () => {
   render(<About />);
   const aboutTitle = screen.getByRole('heading', {
+    level: 2,
     name: 'About Pokédex',
   });
   expect(aboutTitle).toBeInTheDocument();
