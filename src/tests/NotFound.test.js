@@ -6,8 +6,8 @@ import renderWithRouter from '../renderWithRouter';
 test('Testes About', () => {
   renderWithRouter(<About />);
   const aboutTitle = screen.getByRole('heading', {
-    name: /About Pokédex/i,
     level: 2,
+    name: /page requested not found/i,
   });
   expect(aboutTitle).toBeInTheDocument();
 });
@@ -15,7 +15,7 @@ test('Testes About', () => {
 test('Testes img', () => {
   const { getByAltText } = renderWithRouter(<About />);
   const img = getByAltText(
-    /Pokédex/i,
+    /Pikachu crying because the page requested was not found/i,
   );
   expect(img).toHaveAttribute(
     'src',
