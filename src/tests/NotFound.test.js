@@ -1,24 +1,22 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-import About from '../pages/About';
+import NotFound from '../pages/NotFound';
 import renderWithRouter from '../renderWithRouter';
 
-test('Testes About', () => {
-  renderWithRouter(<About />);
-  const aboutTitle = screen.getByRole('heading', {
+test('Testes Not Found', () => {
+  renderWithRouter(<NotFound />);
+  const title = screen.getByRole('heading', {
+    name: /Page requested not found/i,
     level: 2,
-    name: /About Pokédex/i,
   });
-  expect(aboutTitle).toBeInTheDocument();
+  expect(title).toBeInTheDocument();
 });
 
 test('Testes img', () => {
-  const { getByAltText } = renderWithRouter(<About />);
-  const img = getByAltText(
-    /Pokédex/i,
-  );
-  expect(img).toHaveAttribute(
-    'src',
-    'https://cdn2.bulbagarden.net/upload/thumb/8/86/Gen_I_Pok%C3%A9dex.png/800px-Gen_I_Pok%C3%A9dex.png',
-  );
+  renderWithRouter(<NotFound />);
+  const img = screen.getByRole('img', {
+    name: /Pikachu crying because the page requested was not found/i,
+  });
+  expect(img).toBeInTheDocument();
+  expect(img.src).toContain('https://media.giphy.com/media/kNSeTs31XBZ3G/giphy.gif');
 });
