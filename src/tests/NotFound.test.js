@@ -6,18 +6,19 @@ import renderWithRouter from '../renderWithRouter';
 test('Testes About', () => {
   renderWithRouter(<About />);
   const aboutTitle = screen.getByRole('heading', {
+    name: /About Pokédex/i,
     level: 2,
-    name: 'Page requested not found',
   });
   expect(aboutTitle).toBeInTheDocument();
 });
 
 test('Testes img', () => {
-  renderWithRouter(<About />);
-  const aboutTitle = screen.getByRole('img', {
-    name: 'Pikachu crying because the page requested was not found',
-    src: 'https://media.giphy.com/media/kNSeTs31XBZ3G/giphy.gif',
-  });
-  expect(aboutTitle).toBeInTheDocument();
-  expect(img.src).toContain('https://media.giphy.com/media/kNSeTs31XBZ3G/giphy.gif');
+  const { getByAltText } = renderWithRouter(<About />);
+  const img = getByAltText(
+    /Pokédex/i,
+  );
+  expect(img).toHaveAttribute(
+    'src',
+    'https://cdn2.bulbagarden.net/upload/thumb/8/86/Gen_I_Pok%C3%A9dex.png/800px-Gen_I_Pok%C3%A9dex.png',
+  );
 });
