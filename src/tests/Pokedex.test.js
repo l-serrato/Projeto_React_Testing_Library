@@ -1,6 +1,6 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 // import { act } from 'react-dom/test-utils';
 import renderWithRouter from '../renderWithRouter';
 import App from '../App';
@@ -30,10 +30,18 @@ test('filter buttons', () => {
   renderWithRouter(<App />);
   const btn2 = screen.getAllByTestId('pokemon-type-button');
   expect(btn2).toHaveLength(7);
+  const btnFire = screen.getByRole('button', { name: 'Fire' });
+  expect(btnFire).toBeInTheDocument();
+  userEvent.click(btnFire);
+  const pokemonFire = screen.getByText('Charmander');
+  expect(pokemonFire).toBeInTheDocument();
 });
 
 test('all button', () => {
   renderWithRouter(<App />);
   const btn3 = screen.getByText(/All/i);
   expect(btn3).toBeInTheDocument();
+  userEvent.click(btn3);
+  const pokemonName = screen.getByTestId('pokemon-name');
+  expect(pokemonName).toHaveTextContent('Pikachu');
 });
