@@ -8,15 +8,15 @@ import App from '../App';
 test('teste cabeçalho', () => {
   renderWithRouter(<App />);
   const header = screen.getByRole('heading', {
-    name: 'Encountered Pokémon',
     level: 2,
+    name: 'Encountered Pokémon',
   });
   expect(header).toBeDefined();
 });
 
 test('button 1', () => {
   renderWithRouter(<App />);
-  const btn1 = screen.getByTestId('next-pokemon');
+  const btn1 = screen.getByRole('button', { name: /próximo pokémon/i });
   expect(btn1).toBeInTheDocument();
 });
 
