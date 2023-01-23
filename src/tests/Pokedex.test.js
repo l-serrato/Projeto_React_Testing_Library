@@ -35,6 +35,8 @@ test('filter buttons', () => {
   userEvent.click(btnFire);
   const pokemonFire = screen.getByText('Charmander');
   expect(pokemonFire).toBeInTheDocument();
+  const btn3 = screen.getByText(/All/i);
+  expect(btn3).toBeInTheDocument();
 });
 
 test('all button', () => {
