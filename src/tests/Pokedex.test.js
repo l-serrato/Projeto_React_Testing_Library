@@ -20,6 +20,12 @@ test('button 1', () => {
   expect(btn1).toBeInTheDocument();
 });
 
+it('é mostrado apenas um Pokémon por vez', () => {
+  renderWithRouter(<App />);
+  const pokemonName = screen.getAllByTestId('pokemon-name');
+  expect(pokemonName).toHaveLength(1);
+});
+
 test('filter buttons', () => {
   renderWithRouter(<App />);
   const btn2 = screen.getAllByTestId('pokemon-type-button');
