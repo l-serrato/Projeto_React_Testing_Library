@@ -5,11 +5,6 @@ import renderWithRouter from '../renderWithRouter';
 import App from '../App';
 
 const name = 'pokemon-name';
-const btn1 = () => screen.getByRole('button', { name: /Próximo Pokémon/i });
-const btn2 = () => screen.getAllByTestId('pokemon-type-button');
-const btnFire = () => screen.getByRole('button', { name: 'Fire' });
-const btnPsych = () => screen.getByRole('button', { name: 'Psychic' });
-const btn3 = () => screen.getByText(/All/i);
 
 test('teste cabeçalho', () => {
   renderWithRouter(<App />);
@@ -17,12 +12,15 @@ test('teste cabeçalho', () => {
     level: 2,
     name: 'Encountered Pokémon',
   });
-  expect(header).toBeInTheDocument();
+  expect(header).toBeDefined();
 });
-
 test('button 1', () => {
   renderWithRouter(<App />);
-  expect(btn1()).toBeInTheDocument();
+  const btn1 = screen.getByRole('button', { name: /próximo pokémon/i });
+  expect(btn1).toBeInTheDocument();
+  userEvent.click(btn1);
+  const pokemonFire = screen.getByText(/Charmander/i);
+  expect(pokemonFire).toBeInTheDocument();
 });
 
 it('é mostrado apenas um Pokémon por vez', () => {
@@ -33,24 +31,32 @@ it('é mostrado apenas um Pokémon por vez', () => {
 
 test('filter buttons', () => {
   renderWithRouter(<App />);
-  expect(btn2()).toHaveLength(7);
-  expect(btnFire()).toBeInTheDocument();
-  expect(btnPsych()).toBeInTheDocument();
-  userEvent.click(btnFire());
+  const nextBtn = screen.getByRole('button', { name: /Próximo Pokémon/i });
+  const btn2 = screen.getAllByTestId('pokemon-type-button');
+  expect(btn2).toHaveLength(7);
+  const btnFire = screen.getByRole('button', { name: 'Fire' });
+  expect(btnFire).toBeInTheDocument();
+  const btnPsych = screen.getByRole('button', { name: 'Psychic' });
+  expect(btnPsych).toBeInTheDocument();
+  userEvent.click(btnFire);
   const pokemonFire = screen.getByText(/Charmander/i);
   expect(pokemonFire).toBeInTheDocument();
-  userEvent.click(btnPsych());
+  userEvent.click(btnPsych);
   const pokemonPsych = screen.getByText(/Alakazam/i);
   expect(pokemonPsych).toBeInTheDocument();
-  userEvent.click(btn1());
+  userEvent.click(nextBtn);
   expect(screen.getByTestId(name)).toHaveTextContent(/mew/i);
-  expect(btn3()).toBeInTheDocument();
+  const btn3 = screen.getByText(/All/i);
+  expect(btn3).toBeInTheDocument();
+  userEvent.click(btn3);
+  const pokemonName = screen.getByTestId(name);
+  expect(pokemonName).toHaveTextContent('Pikachu');
 });
-
 test('all button', () => {
   renderWithRouter(<App />);
-  expect(btn3()).toBeInTheDocument();
-  expect(btn3()).toHaveTextContent(/All/i);
-  userEvent.click(btn3());
-  expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
+  const btn3 = screen.getByText(/all/i);
+  expect(btn3).toBeInTheDocument();
+  userEvent.click(btn3);
+  const pokemonName = screen.getByTestId(name);
+  expect(pokemonName).toHaveTextContent('Pikachu');
 });
