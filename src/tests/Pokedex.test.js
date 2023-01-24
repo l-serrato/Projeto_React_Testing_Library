@@ -4,42 +4,53 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from '../renderWithRouter';
 import App from '../App';
 
-const encounteredTitle = () => screen.getByRole('heading', { name: /encountered pokémon/i });
-const nextPokemonBtn = () => screen.getByRole('button', { name: /próximo pokémon/i });
-const fireTypeBtn = () => screen.getByText(/fire/i);
-const psychicTypeBtn = () => screen.getAllByTestId('pokemon-type-button')[4];
-const nextBtn = () => screen.getByRole('button', {
-  name: /próximo pokémon/i,
+const name = 'pokemon-name';
+const btn1 = () => screen.getByRole('button', { name: /Próximo Pokémon/i });
+const btn2 = () => screen.getAllByTestId('pokemon-type-button');
+const btnFire = () => screen.getByRole('button', { name: 'Fire' });
+const btnPsych = () => screen.getByRole('button', { name: 'Psychic' });
+const btn3 = () => screen.getByText(/All/i);
+
+test('teste cabeçalho', () => {
+  renderWithRouter(<App />);
+  const header = screen.getByRole('heading', {
+    level: 2,
+    name: 'Encountered Pokémon',
+  });
+  expect(header).toBeInTheDocument();
 });
-const allBtn = () => screen.getByText(/all/i);
 
-describe('Testes no componente Pokedéx', () => {
-  it('Verifique se a a página contém um heading h2 com o texto "Encountered Pokémon"', () => {
-    renderWithRouter(<App />);
+test('button 1', () => {
+  renderWithRouter(<App />);
+  expect(btn1()).toBeInTheDocument();
+});
 
-    expect(encounteredTitle()).toBeInTheDocument();
-  });
+it('é mostrado apenas um Pokémon por vez', () => {
+  renderWithRouter(<App />);
+  const pokemonName = screen.getAllByTestId(name);
+  expect(pokemonName).toHaveLength(1);
+});
 
-  it('Verifica se o botão contém o texto "Próximo Pokémon"', () => {
-    renderWithRouter(<App />);
+test('filter buttons', () => {
+  renderWithRouter(<App />);
+  expect(btn2()).toHaveLength(7);
+  expect(btnFire()).toBeInTheDocument();
+  expect(btnPsych()).toBeInTheDocument();
+  userEvent.click(btnFire());
+  const pokemonFire = screen.getByText(/Charmander/i);
+  expect(pokemonFire).toBeInTheDocument();
+  userEvent.click(btnPsych());
+  const pokemonPsych = screen.getByText(/Alakazam/i);
+  expect(pokemonPsych).toBeInTheDocument();
+  userEvent.click(btn1());
+  expect(screen.getByTestId(name)).toHaveTextContent(/mew/i);
+  expect(btn3()).toBeInTheDocument();
+});
 
-    expect(nextPokemonBtn()).toBeInTheDocument();
-    expect(nextPokemonBtn()).toHaveTextContent('Próximo Pokémon');
-  });
-
-  it('Verifica se é exibido o próximo Pokémon da lista ao clicar no botão', () => {
-    renderWithRouter(<App />);
-
-    userEvent.click(fireTypeBtn());
-    expect(screen.getByText(/charmander/i)).toBeInTheDocument();
-
-    userEvent.click(psychicTypeBtn());
-    expect(screen.getByTestId('pokemon-name')).toHaveTextContent(/alakazam/i);
-
-    userEvent.click(nextBtn());
-    expect(screen.getByTestId('pokemon-name')).toHaveTextContent(/mew/i);
-
-    userEvent.click(allBtn());
-    expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
-  });
+test('all button', () => {
+  renderWithRouter(<App />);
+  expect(btn3()).toBeInTheDocument();
+  expect(btn3()).toHaveTextContent(/All/i);
+  userEvent.click(btn3());
+  expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
 });
